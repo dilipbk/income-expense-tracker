@@ -11,6 +11,7 @@ const ExportTransections = () => {
   const handleExport = async () => {
     setShowModal(false);
     const promise = exportTransections();
+
     await toast.promise(promise, {
       loading: "exporting transections...",
       success: "successfully exported transections",

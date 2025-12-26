@@ -48,3 +48,14 @@
 .custom-select__menu {
   z-index: 99999 !important;
 }
+
+/* hide spinner arrows on number inputs */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}

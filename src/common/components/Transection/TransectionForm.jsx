@@ -72,6 +72,7 @@ const TransectionForm = ({ mode = "CREATE", initialValues, handleSubmit }) => {
                 id="amount"
                 value={values.amount}
                 className="form-input input"
+                onWheel={(e) => e.target.blur()}
               />
               <p className="input_error">{errors.amount}</p>
             </div>

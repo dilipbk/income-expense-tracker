@@ -6,6 +6,23 @@ import { arrayToObj } from "../../utilities/objArraySwap";
 import useIndexedDB from "../hooks/useIndexedDB";
 import { useAuth } from "./authContext";
 
+export const sanitizeTransactions = (transections) => {
+  // sanitize transections
+  const filteredTransections = transections.filter((item) => {
+    const hasAllProperties =
+      item?.id &&
+      item?.title &&
+      typeof item.date === "number" &&
+      ["income", "expense"].includes(item?.type) &&
+      item?.category &&
+      item?.createdAt;
+
+    return hasAllProperties;
+  });
+
+  return arrayToObj(filteredTransections, "id");
+};
+
 // transection context
 export const TransectionContext = createContext({
   transections: [],
@@ -79,30 +96,18 @@ export const TransectionProvider = ({ children }) => {
       try {
         const myUser = authUser || user;
         if (!myUser) throw Error("unauthorized request");
-        if (!transections.length) throw Error("nothing to export");
+        // if (!transections.length) throw Error("nothing to export");
 
-        // sanitize transections
-        const filteredTransections = transections.filter((item) => {
-          const hasAllProperties =
-            item?.id &&
-            item?.title &&
-            typeof item.date === "number" &&
-            ["income", "expense"].includes(item?.type) &&
-            item?.category &&
-            item?.createdAt;
+        const transectionsObj = sanitizeTransactions(transections);
 
-          return hasAllProperties;
-        });
-
-        const transectionsObj = arrayToObj(filteredTransections, "id");
-        const response = await createDocument(
+        await createDocument(
           firestoreConfig.collection,
           myUser.uid,
           transectionsObj
         );
         resolve({ message: "successfully exported transections" });
       } catch (error) {
-        resolve({ message: error.message });
+        reject({ message: error.message });
       }
     });
 

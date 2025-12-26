@@ -23,14 +23,6 @@
     "label": "Health",
     "value": "health"
   },
-  "bkash": {
-    "label": "Bkash",
-    "value": "bkash"
-  },
-  "nagad": {
-    "label": "Nagad",
-    "value": "nagad"
-  },
   "stationary": {
     "label": "Stationary",
     "value": "stationary"

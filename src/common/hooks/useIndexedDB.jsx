@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import IndexedDB from "../../lib/indexedDB";
+import firestoreConfig from "../../config/firestore.config";
+import { useAuth } from "../contexts/authContext";
+import { sanitizeTransactions } from "../contexts/transectionContext";
+import { createDocument } from "../../lib/firestore";
 
 const useIndexedDB = (NAME, VERSION, STORE, KEY_PATH, OLD_STORE) => {
   const DB = new IndexedDB(NAME, VERSION, STORE, KEY_PATH, OLD_STORE);
 
   const [data, setData] = useState(null);
+  const { user } = useAuth();
 
   const wrapper =
     (callback) =>
@@ -26,8 +31,12 @@ const useIndexedDB = (NAME, VERSION, STORE, KEY_PATH, OLD_STORE) => {
 
   const createData = wrapper(async (data) => {
     const response = await DB.create(data);
-    // update local db
-    await getData();
+    const transactions = await getData();
+
+    const transectionsObj = sanitizeTransactions(transactions);
+
+    await createDocument(firestoreConfig.collection, user.uid, transectionsObj);
+
     return response;
   });
   const insertData = wrapper(async (data = []) => {
