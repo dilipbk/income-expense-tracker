@@ -77,7 +77,7 @@ export const getCollection = ({
 
       // check collection contains or not
       if (db.objectStoreNames.contains(store)) {
-        // collection transection
+        // collection transaction
         const tx = db.transaction(store, "readonly");
         const txStore = tx.objectStore(store);
         // collection data
@@ -85,7 +85,7 @@ export const getCollection = ({
 
         // handle data success
         data.onsuccess = (event) => {
-          // close database on transection complete
+          // close database on transaction complete
           tx.oncomplete = () => db.close();
           resolve(data.result);
         };
@@ -116,7 +116,7 @@ export const createData = ({
     // handle database success
     databaseReq.onsuccess = (event) => {
       const db = databaseReq.result;
-      // collection transection
+      // collection transaction
       const tx = db.transaction(store, "readwrite");
       const txStore = tx.objectStore(store);
       // collection data
@@ -124,7 +124,7 @@ export const createData = ({
 
       // handle data success
       data.onsuccess = (event) => {
-        // close database on transection complete
+        // close database on transaction complete
         tx.oncomplete = () => db.close();
         resolve(data.result);
       };
@@ -152,7 +152,7 @@ export const updateData = ({
     // handle database success
     databaseReq.onsuccess = (event) => {
       const db = databaseReq.result;
-      // collection transection
+      // collection transaction
       const tx = db.transaction(store, "readwrite");
       const txStore = tx.objectStore(store);
       // put to collection data
@@ -160,7 +160,7 @@ export const updateData = ({
 
       // handle data success
       data.onsuccess = (event) => {
-        // close database on transection complete
+        // close database on transaction complete
         tx.oncomplete = () => db.close();
         resolve(data.result);
       };
@@ -188,7 +188,7 @@ export const deleteData = ({
     // handle database success
     databaseReq.onsuccess = (event) => {
       const db = databaseReq.result;
-      // collection transection
+      // collection transaction
       const tx = db.transaction(store, "readwrite");
       const txStore = tx.objectStore(store);
       // delete collection from data
@@ -196,7 +196,7 @@ export const deleteData = ({
 
       // handle data success
       data.onsuccess = (event) => {
-        // close database on transection complete
+        // close database on transaction complete
         tx.oncomplete = () => db.close();
         resolve(data.result);
       };
@@ -219,7 +219,7 @@ export const clearData = ({ dbname = "", version = null, store = null }) => {
     // handle database success
     databaseReq.onsuccess = (event) => {
       const db = databaseReq.result;
-      // collection transection
+      // collection transaction
       const tx = db.transaction(store, "readwrite");
       const txStore = tx.objectStore(store);
       // delete collection from data
@@ -227,7 +227,7 @@ export const clearData = ({ dbname = "", version = null, store = null }) => {
 
       // handle data success
       data.onsuccess = (event) => {
-        // close database on transection complete
+        // close database on transaction complete
         tx.oncomplete = () => db.close();
         resolve(data.result);
       };

@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useCallback, useContext, useMemo } from "react";
 import firestoreConfig from "../../config/firestore.config";
 import indexedDBConfig from "../../config/indexedDB.config";
 import { createDocument, getDocument } from "../../lib/firestore";
@@ -6,6 +6,12 @@ import { arrayToObj } from "../../utilities/objArraySwap";
 import useIndexedDB from "../hooks/useIndexedDB";
 import { useAuth } from "./authContext";
 
+/**
+ * Sanitizes and validates transaction data
+ * Filters out transactions with missing required properties
+ * @param {Array} transactions - Array of transaction objects
+ * @returns {Object} Object with transaction IDs as keys
+ */
 export const sanitizeTransactions = (transactions) => {
   // sanitize transactions
   const filteredTransactions = transactions.filter((item) => {
@@ -57,59 +63,51 @@ export const TransactionProvider = ({ children }) => {
     indexedDBConfig.OLD_STORE
   );
 
-  const importTransactions = async (authUser) =>
-    new Promise(async (resolve, reject) => {
-      try {
-        const myUser = authUser || user;
-        if (!myUser) throw Error("unauthorized request");
-        // get data from server
-        const response = await getDocument(
-          firestoreConfig.collection,
-          myUser.uid
-        );
-        if (!response) resolve({ message: "nothing to import" });
-        const responseArr = Object.values(response);
-        // filter the valid data
-        const filteredResponse = responseArr.filter((item) => {
-          const isExist = transactions.findIndex((t) => t.id === item.id);
-          const hasAllProperties =
-            item?.id &&
-            item?.title &&
-            typeof item.date === "number" &&
-            ["income", "expense"].includes(item?.type) &&
-            item?.amount &&
-            item?.category &&
-            item?.createdAt;
-          return isExist < 0 && hasAllProperties;
-        });
-
-        // insert data to the local database
-        await insertTransactions(filteredResponse);
-        resolve({ message: "successfully imported transactions" });
-      } catch (error) {
-        reject({ message: error.message });
-      }
+  const importTransactions = useCallback(async (authUser) => {
+    const myUser = authUser || user;
+    if (!myUser) throw Error("unauthorized request");
+    
+    // get data from server
+    const response = await getDocument(
+      firestoreConfig.collection,
+      myUser.uid
+    );
+    
+    if (!response) return { message: "nothing to import" };
+    
+    const responseArr = Object.values(response);
+    // filter the valid data
+    const filteredResponse = responseArr.filter((item) => {
+      const isExist = transactions.findIndex((t) => t.id === item.id);
+      const hasAllProperties =
+        item?.id &&
+        item?.title &&
+        typeof item.date === "number" &&
+        ["income", "expense"].includes(item?.type) &&
+        item?.amount &&
+        item?.category &&
+        item?.createdAt;
+      return isExist < 0 && hasAllProperties;
     });
 
-  const exportTransactions = async (authUser) =>
-    new Promise(async (resolve, reject) => {
-      try {
-        const myUser = authUser || user;
-        if (!myUser) throw Error("unauthorized request");
-        // if (!transactions.length) throw Error("nothing to export");
+    // insert data to the local database
+    await insertTransactions(filteredResponse);
+    return { message: "successfully imported transactions" };
+  }, [user, transactions, insertTransactions]);
 
-        const transactionsObj = sanitizeTransactions(transactions);
+  const exportTransactions = useCallback(async (authUser) => {
+    const myUser = authUser || user;
+    if (!myUser) throw Error("unauthorized request");
 
-        await createDocument(
-          firestoreConfig.collection,
-          myUser.uid,
-          transactionsObj
-        );
-        resolve({ message: "successfully exported transactions" });
-      } catch (error) {
-        reject({ message: error.message });
-      }
-    });
+    const transactionsObj = sanitizeTransactions(transactions);
+
+    await createDocument(
+      firestoreConfig.collection,
+      myUser.uid,
+      transactionsObj
+    );
+    return { message: "successfully exported transactions" };
+  }, [user, transactions]);
 
   // context value with memorization
   const value = useMemo(
@@ -124,7 +122,7 @@ export const TransactionProvider = ({ children }) => {
       importTransactions,
       clearTransactions,
     }),
-    [transactions, user]
+    [transactions, createTransaction, updateTransaction, deleteTransaction, deleteTransactions, exportTransactions, importTransactions, clearTransactions]
   );
   return (
     <TransactionContext.Provider value={value}>

@@ -7,15 +7,15 @@
   },
   {
     "id": "#2",
-    "title": "Transections",
+    "title": "Transactions",
     "icon": "money",
-    "link": "/transections"
+    "link": "/transactions"
   },
   {
     "id": "#3",
-    "title": "New transection",
+    "title": "New transaction",
     "icon": "add",
-    "link": "/transections/create"
+    "link": "/transactions/create"
   },
   {
     "id": "#4",

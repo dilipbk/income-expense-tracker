@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { BsBoxArrowRight } from "react-icons/bs";
 import { useAuth } from "../../contexts/authContext";
-import { useTransection } from "../../contexts/transectionContext";
+import { useTransaction } from "../../contexts/transactionContext";
 import SettingsModal from "./SettingsModal";
 
 const Profile = () => {
   const { user, logout } = useAuth();
-  const { clearTransections, exportTransections, transections } =
-    useTransection();
+  const { clearTransactions, exportTransactions, transactions } =
+    useTransaction();
   const [showModal, setShowModal] = useState(false);
 
   // handle log out
@@ -17,27 +17,28 @@ const Profile = () => {
       setShowModal(false);
       // make a backup
       if (backup) {
-        const backupPromise = exportTransections();
+        const backupPromise = exportTransactions();
         await toast.promise(backupPromise, {
           loading: "backing up...",
           success: "successfully backed up.",
-          error: "cannot backup transections",
+          error: "cannot backup transactions",
         });
       }
-      const promise = Promise.all([await logout(), await clearTransections()]);
+      const promise = Promise.all([await logout(), await clearTransactions()]);
       await toast.promise(promise, {
         loading: "logging out...",
         success: "successfully logged out.",
-        error: "something wents to wrong!",
+        error: "something went wrong!",
       });
     } catch (error) {
-      console.log(error);
+      console.error("Failed to logout:", error);
+      toast.error("Failed to logout. Please try again.");
     }
   };
 
   // handle click
   const handleClick = async () => {
-    if (transections.length) {
+    if (transactions.length) {
       setShowModal(true);
     } else {
       await handleLogout(false);
@@ -70,7 +71,7 @@ const Profile = () => {
         onClose={() => setShowModal(false)}
         title="Make a backup!"
         description={
-          "By signing out all existing transections will be removed & this task cannot be undone. if you don't want to loose your transections then make a backup!"
+          "By signing out all existing transactions will be removed & this task cannot be undone. if you don't want to loose your transactions then make a backup!"
         }
         agreeText="Backup"
         disagreeText="Avoid"

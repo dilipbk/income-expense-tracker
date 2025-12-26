@@ -37,7 +37,8 @@ const EditTransaction = () => {
         error: "something went wrong",
       });
     } catch (error) {
-      console.error(error);
+      console.error("Failed to update transaction:", error);
+      toast.error("Failed to update transaction");
     }
     navigate("/transactions", { replace: true });
   };

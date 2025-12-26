@@ -1,18 +1,18 @@
 import React from "react";
 import { toast } from "react-hot-toast";
 import { BsCloudDownload } from "react-icons/bs";
-import { useTransection } from "../../contexts/transectionContext";
+import { useTransaction } from "../../contexts/transactionContext";
 
-const ImportTransections = () => {
-  const { importTransections } = useTransection();
+const ImportTransactions = () => {
+  const { importTransactions } = useTransaction();
 
   const handleImport = async () => {
-    const promise = importTransections();
+    const promise = importTransactions();
 
     await toast.promise(promise, {
-      loading: "importing transections...",
-      success: "successfully imported transections",
-      error: "cannot import transections",
+      loading: "importing transactions...",
+      success: "successfully imported transactions",
+      error: "cannot import transactions",
     });
   };
 
@@ -32,4 +32,4 @@ const ImportTransections = () => {
   );
 };
 
-export default ImportTransections;
+export default ImportTransactions;

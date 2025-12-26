@@ -2,7 +2,7 @@ import React from "react";
 import { BsXLg } from "react-icons/bs";
 import categories from "../../../data/categories.json";
 
-const TransectionFilter = ({
+const TransactionFilter = ({
   isOpen = false,
   close = () => {},
   filterCategories = [],
@@ -37,7 +37,7 @@ const TransectionFilter = ({
         </div>
 
         <div className="mt-10 flex flex-col gap-2">
-          <label className="text-base font-medium">Transection Type:</label>
+          <label className="text-base font-medium">Transaction Type:</label>
           <select
             className="select"
             value={filterType}
@@ -90,4 +90,4 @@ const TransectionFilter = ({
   );
 };
 
-export default TransectionFilter;
+export default TransactionFilter;

@@ -1,3 +1,9 @@
+/**
+ * Converts Firebase auth error codes to user-friendly error messages
+ * @param {Object} error - Firebase auth error object
+ * @param {string} error.code - Firebase auth error code
+ * @returns {string} User-friendly error message
+ */
 const authErrorMessage = (error) => {
   switch (error?.code) {
     case "auth/account-exists-with-different-credential":
@@ -9,7 +15,7 @@ const authErrorMessage = (error) => {
     case "auth/popup-closed-by-user":
       return "authorization canceled by user";
     default:
-      return "something wents to wrong, please try again later.";
+      return "something went wrong, please try again later.";
   }
 };
 

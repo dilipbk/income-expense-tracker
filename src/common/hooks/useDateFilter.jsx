@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useDateFilter = (transections) => {
+const useDateFilter = (transactions) => {
   const [data, setData] = useState([]);
   const [filterDate, setFilterDate] = useState(new Date());
   const [filterType, setFilterType] = useState("MONTH");
@@ -12,14 +12,14 @@ const useDateFilter = (transections) => {
 
   // update filter data
   useEffect(() => {
-    if (transections) {
+    if (transactions) {
       switch (filterType) {
         case "NONE":
-          setData(transections);
+          setData(transactions);
           break;
         case "MONTH":
           setData(
-            transections?.filter((t) => {
+            transactions?.filter((t) => {
               const tDate = new Date(t.date);
               return (
                 tDate.getMonth() === filterDate.getMonth() &&
@@ -30,7 +30,7 @@ const useDateFilter = (transections) => {
           break;
         case "YEAR":
           setData(
-            transections.filter((t) => {
+            transactions.filter((t) => {
               const tDate = new Date(t.date);
               return tDate.getFullYear() === filterDate.getFullYear();
             })
@@ -40,7 +40,7 @@ const useDateFilter = (transections) => {
           break;
       }
     }
-  }, [transections, filterDate]);
+  }, [transactions, filterDate]);
 
   return {
     filteredData: data,

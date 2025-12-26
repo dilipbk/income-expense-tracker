@@ -1,33 +1,42 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "../common/layout";
-import Dashboard from "../pages/Dashboard";
-import NotFound from "../pages/Error/NotFound";
-import Feedback from "../pages/Feedback";
-import Home from "../pages/Home";
-import Settings from "../pages/Settings";
-import Transections from "../pages/Transections";
-import CreateTransection from "../pages/Transections/CreateTransection";
-import EditTransection from "../pages/Transections/EditTransection";
+import Preloader from "../common/components/Preloader";
+
+// Lazy load pages for better performance
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const NotFound = lazy(() => import("../pages/Error/NotFound"));
+const Feedback = lazy(() => import("../pages/Feedback"));
+const Home = lazy(() => import("../pages/Home"));
+const Settings = lazy(() => import("../pages/Settings"));
+const Transactions = lazy(() => import("../pages/Transactions"));
+const CreateTransaction = lazy(
+  () => import("../pages/Transactions/CreateTransaction")
+);
+const EditTransaction = lazy(
+  () => import("../pages/Transactions/EditTransaction")
+);
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/feedback" element={<Feedback />} />
+    <Suspense fallback={<Preloader />}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/feedback" element={<Feedback />} />
 
-      {/* app routes */}
-      <Route element={<Layout />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/transections" element={<Transections />} />
-        <Route path="/transections/create" element={<CreateTransection />} />
-        <Route path="/transections/edit/:id" element={<EditTransection />} />
-        <Route path="/settings" element={<Settings />} />
-      </Route>
+        {/* app routes */}
+        <Route element={<Layout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/transactions/create" element={<CreateTransaction />} />
+          <Route path="/transactions/edit/:id" element={<EditTransaction />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
 
-      {/* not found page */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* not found page */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   );
 };
 

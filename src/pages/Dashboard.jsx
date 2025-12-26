@@ -15,15 +15,15 @@ import {
 } from "recharts";
 import DateFilter from "../common/components/DateFilter";
 import Stats from "../common/components/Stats";
-import { useTransection } from "../common/contexts/transectionContext";
+import { useTransaction } from "../common/contexts/transactionContext";
 import useDateFilter from "../common/hooks/useDateFilter";
 import categories from "../data/categories.json";
 import { categoryData, dateData } from "../utilities/chartData";
 
 const Dashboard = () => {
-  const { transections } = useTransection();
+  const { transactions } = useTransaction();
   const { filterDate, filterType, filteredData, setFilterDate, setFilterType } =
-    useDateFilter(transections);
+    useDateFilter(transactions);
 
   // generate graph data for analytics
   const graphData = useMemo(
@@ -58,14 +58,14 @@ const Dashboard = () => {
             onFilterTypeChange={setFilterType}
           />
 
-          <Link to={"/transections/create"} className="btn btn-success ">
+          <Link to={"/transactions/create"} className="btn btn-success ">
             <BsPlus />
             Add New
           </Link>
         </div>
       </div>
 
-      <Stats transections={filteredData} />
+      <Stats transactions={filteredData} />
 
       <div className="grid grid-cols-12 mt-5 gap-5">
         <div className="col-span-12 ">
@@ -98,7 +98,7 @@ const Dashboard = () => {
 
         <div className="col-span-12">
           <span className="uppercase tracking-wider font-medium text-sm inline-block mb-1">
-            transection on categories
+            transaction on categories
           </span>
           <div className=" bg-white border border-gray-200  dark:bg-slate-800 dark:border-slate-700 rounded pt-4">
             <ResponsiveContainer width={"99%"} minHeight={300}>
@@ -122,5 +122,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-// TODO: make charts modular and fix recent transection

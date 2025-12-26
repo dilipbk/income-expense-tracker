@@ -3,26 +3,27 @@ import { toast } from "react-hot-toast";
 import { BiLoader } from "react-icons/bi";
 import { BsGoogle } from "react-icons/bs";
 import { useAuth } from "../../contexts/authContext";
-import { useTransection } from "../../contexts/transectionContext";
+import { useTransaction } from "../../contexts/transactionContext";
 
 const SignIn = () => {
   const { login, status } = useAuth();
-  const { importTransections } = useTransection();
+  const { importTransactions } = useTransaction();
 
   const handleLogin = async () => {
     try {
       const response = await login();
       // if successfully logged in then import existing data
       if (response) {
-        const promise = importTransections(response);
+        const promise = importTransactions(response);
         await toast.promise(promise, {
-          loading: "importing existing transections...",
-          success: "successfully imported transections",
-          error: "cannot import transections",
+          loading: "importing existing transactions...",
+          success: "successfully imported transactions",
+          error: "cannot import transactions",
         });
       }
     } catch (error) {
-      console.log(error);
+      console.error("Failed to sign in:", error);
+      toast.error("Failed to sign in. Please try again.");
     }
   };
 

@@ -171,5 +171,3 @@ export const categoryData = (
     );
   });
 };
-
-// TODO: Refactor this code

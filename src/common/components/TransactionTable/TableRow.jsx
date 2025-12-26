@@ -20,14 +20,19 @@ const TableRow = ({
     <tr className={`table_body_row ${type}`}>
       {isInteractive ? (
         <td className="table_body_item text-center px-1">
-          <input type="checkbox" checked={isSelected} onChange={handleSelect} />
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={handleSelect}
+            aria-label={`Select transaction ${title}`}
+          />
         </td>
       ) : null}
       <td className="table_body_item">{title}</td>
       <td className="table_body_item">{amount}</td>
       <td className="table_body_item">{category}</td>
       <td className="table_body_item">
-        <span className="transection_type">{type}</span>
+        <span className="transaction_type">{type}</span>
       </td>
       <td className="table_body_item">{format(date, "dd/MM/yyyy")}</td>
       {isInteractive ? (
@@ -38,16 +43,18 @@ const TableRow = ({
         >
           <Link
             className={`btn btn-icon btn-primary btn-sm`}
-            to={`/transections/edit/${id}`}
+            to={`/transactions/edit/${id}`}
+            aria-label={`Edit transaction ${title}`}
           >
-            <BsPen />
+            <BsPen aria-hidden="true" />
           </Link>
 
           <button
             className={`btn btn-icon btn-danger btn-sm`}
             onClick={handleDelete}
+            aria-label={`Delete transaction ${title}`}
           >
-            <BsTrash />
+            <BsTrash aria-hidden="true" />
           </button>
         </td>
       ) : null}

@@ -1,11 +1,11 @@
 import React from "react";
 import toast from "react-hot-toast";
 import readJSON from "../../utilities/readJSON";
-import { useTransection } from "../contexts/TransectionContext";
+import { useTransaction } from "../contexts/TransactionContext";
 
 const ImportFile = ({ id = null, setLoading = () => {} }) => {
-  // transection context
-  const { insertTransection } = useTransection();
+  // transaction context
+  const { insertTransaction } = useTransaction();
 
   const handleFile = async (e) => {
     try {
@@ -13,18 +13,18 @@ const ImportFile = ({ id = null, setLoading = () => {} }) => {
       const response = await readJSON(e.target?.files[0]);
       // check for file data
       if (response?.data?.length) {
-        const promise = insertTransection(response.data);
+        const promise = insertTransaction(response.data);
         await toast.promise(promise, {
           loading: "inserting data...",
           error: "error: cannot insert data",
-          success: "transection inserted successfully",
+          success: "transaction inserted successfully",
         });
       }
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      toast.error(error.message);
-      console.log(error);
+      console.error("Failed to import file:", error);
+      toast.error(error.message || "Failed to import file");
     }
     // reset input state
     e.target.value = "";

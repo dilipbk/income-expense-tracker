@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
-import { useTransection } from "../../contexts/transectionContext";
+import { useTransaction } from "../../contexts/transactionContext";
 import useSelect from "../../hooks/useSelect";
-import useTransectionFilter from "../../hooks/useTransectionFilter";
+import useTransactionFilter from "../../hooks/useTransactionFilter";
 import Stats from "../Stats";
 import TableBody from "./TableBody";
-import TransectionFilter from "./TableFilter";
+import TransactionFilter from "./TableFilter";
 import TableHeader from "./TableHeader";
-import TransectionHeader from "./TableNav";
+import TransactionHeader from "./TableNav";
 
-const TransectionTable = ({
+const TransactionTable = ({
   className = "",
   data = [],
   showStats = false,
   isInteractive = false,
   small = false,
 }) => {
-  // transection context
-  const { deleteTransection, deleteTransections } = useTransection();
+  // transaction context
+  const { deleteTransaction, deleteTransactions } = useTransaction();
 
   // filter states
   const {
@@ -30,7 +30,7 @@ const TransectionTable = ({
     setFilterType,
     setQuery,
     toggleFilterCategory,
-  } = useTransectionFilter(data);
+  } = useTransactionFilter(data);
   const [showFilter, setShowFilter] = useState(false);
 
   // selected row states
@@ -43,24 +43,26 @@ const TransectionTable = ({
     isAllSelected,
   } = useSelect(tableData, "id");
 
-  // transection loading
+  // transaction loading
   const [isLoading, setIsLoading] = useState(false);
 
   // delete selected rows
   const deleteSelectedRows = async () => {
     try {
       setIsLoading(true);
-      const promise = deleteTransections(selectedRows);
+      const promise = deleteTransactions(selectedRows);
       await toast.promise(promise, {
-        loading: "deleting selected transection...",
-        success: "selected transections deleted",
-        error: "something wents to wrong!",
+        loading: "deleting selected transaction...",
+        success: "selected transactions deleted",
+        error: "something went wrong!",
       });
       // reset states
       clearSelect();
       setIsLoading(false);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to delete transactions:", error);
+      toast.error("Failed to delete selected transactions");
+      setIsLoading(false);
     }
   };
 
@@ -68,18 +70,20 @@ const TransectionTable = ({
   const deleteRow = async (id) => {
     try {
       setIsLoading(true);
-      const promise = deleteTransection(id);
+      const promise = deleteTransaction(id);
       await toast.promise(promise, {
-        loading: "deleting transection...",
-        success: "transection deleted",
-        error: "something wents to wrong!",
+        loading: "deleting transaction...",
+        success: "transaction deleted",
+        error: "something went wrong!",
       });
 
       // reset states
       removeSelect(id);
       setIsLoading(false);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to delete transaction:", error);
+      toast.error("Failed to delete transaction");
+      setIsLoading(false);
     }
   };
 
@@ -87,7 +91,7 @@ const TransectionTable = ({
     <div className={`overflow-hidden ${className}`}>
       {showStats ? (
         <Stats
-          transections={tableData}
+          transactions={tableData}
           className="mb-10"
           showWallet={filterType == "ALL"}
           showTotal={filterType == "ALL"}
@@ -97,7 +101,7 @@ const TransectionTable = ({
       ) : null}
 
       {isInteractive ? (
-        <TransectionHeader
+        <TransactionHeader
           query={query}
           setQuery={setQuery}
           handleDelete={deleteSelectedRows}
@@ -130,7 +134,7 @@ const TransectionTable = ({
       </div>
 
       {isInteractive ? (
-        <TransectionFilter
+        <TransactionFilter
           isOpen={showFilter}
           close={() => setShowFilter(false)}
           filterCategories={filterCategories}
@@ -145,4 +149,4 @@ const TransectionTable = ({
   );
 };
 
-export default TransectionTable;
+export default TransactionTable;

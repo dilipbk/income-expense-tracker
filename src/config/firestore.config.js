@@ -1,5 +1,5 @@
 const firestoreConfig = {
-  collection: "transections",
+  collection: "transections", // Keep original name for backward compatibility
 };
 
 export default firestoreConfig;

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import {
   handleAuthChanged,
   handleGoogleLogin,
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // login to auth
-  const login = async () => {
+  const login = useCallback(async () => {
     try {
       setStatus("LOADING");
       const response = await handleGoogleLogin();
@@ -50,10 +50,10 @@ export const AuthProvider = ({ children }) => {
       setStatus("UNAUTHORIZED");
       setError(err);
     }
-  };
+  }, []);
 
   // logout from auth
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       setStatus("LOADING");
       const response = await handleLogout();
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
       setStatus("UNAUTHORIZED");
       setError(err);
     }
-  };
+  }, []);
 
   // memorized value
   const value = useMemo(
@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
       login,
       logout,
     }),
-    [user, status, error]
+    [user, status, error, login, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

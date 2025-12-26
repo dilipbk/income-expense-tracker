@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { HiOutlineLightBulb } from "react-icons/hi/";
 import { useRegisterSW } from "virtual:pwa-register/react";
+import { initBackgroundSync } from "./backgroundSync";
 
 const ServiceWorker = () => {
   const {
@@ -17,6 +18,9 @@ const ServiceWorker = () => {
       console.log(
         "[📦 Track Taka] - Your app has been installed, it now works offline!"
       );
+      
+      // Initialize background sync
+      initBackgroundSync();
     } else if (needRefresh) {
       console.log("[📦 Track Taka] - A new update is available!");
       toast.custom(
@@ -53,5 +57,3 @@ const ServiceWorker = () => {
 };
 
 export default ServiceWorker;
-
-// TODO: Make update app mandatory

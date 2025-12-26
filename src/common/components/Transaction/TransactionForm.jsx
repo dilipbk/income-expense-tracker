@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import categories from "../../../data/categories.json";
 import FormDatePicker from "./FormDatePicker";
 
-const transectionSchema = Yup.object({
+const transactionSchema = Yup.object({
   title: Yup.string().max(30).required(),
   amount: Yup.number().required().min(1),
   type: Yup.string().oneOf(["expense", "income"]).required(),
@@ -14,7 +14,7 @@ const transectionSchema = Yup.object({
   date: Yup.date().required(),
 });
 
-const TransectionForm = ({ mode = "CREATE", initialValues, handleSubmit }) => {
+const TransactionForm = ({ mode = "CREATE", initialValues, handleSubmit }) => {
   // router navigate
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
@@ -44,7 +44,7 @@ const TransectionForm = ({ mode = "CREATE", initialValues, handleSubmit }) => {
     <Formik
       initialValues={formValues}
       onSubmit={handleSubmit}
-      validationSchema={transectionSchema}
+      validationSchema={transactionSchema}
       enableReinitialize={true}
       validateOnChange={false}
       validateOnBlur={false}
@@ -53,7 +53,7 @@ const TransectionForm = ({ mode = "CREATE", initialValues, handleSubmit }) => {
         return (
           <Form className="w-full lg:w-[500px] flex flex-col gap-4">
             <div className="input_group" data-invalid={!!errors.title}>
-              <label htmlFor="title">Transection Title</label>
+              <label htmlFor="title">Transaction Title</label>
               <Field
                 type="text"
                 name="title"
@@ -65,7 +65,7 @@ const TransectionForm = ({ mode = "CREATE", initialValues, handleSubmit }) => {
             </div>
 
             <div className="input_group" data-invalid={!!errors.amount}>
-              <label htmlFor="amount">Transection Amount</label>
+              <label htmlFor="amount">Transaction Amount</label>
               <Field
                 type="number"
                 name="amount"
@@ -78,7 +78,7 @@ const TransectionForm = ({ mode = "CREATE", initialValues, handleSubmit }) => {
             </div>
 
             <div className="input_group" data-invalid={!!errors.type}>
-              <label htmlFor="type">Transection Type</label>
+              <label htmlFor="type">Transaction Type</label>
 
               <Field
                 as="select"
@@ -88,7 +88,7 @@ const TransectionForm = ({ mode = "CREATE", initialValues, handleSubmit }) => {
                 className="form-select input"
               >
                 <option disabled value={""}>
-                  select transection type
+                  select transaction type
                 </option>
                 <option value="income">Income</option>
                 <option value="expense">Expense</option>
@@ -97,7 +97,7 @@ const TransectionForm = ({ mode = "CREATE", initialValues, handleSubmit }) => {
             </div>
 
             <div className="input_group" data-invalid={!!errors.category}>
-              <label htmlFor="category">Transection Category</label>
+              <label htmlFor="category">Transaction Category</label>
               <ReactSelect
                 name="category"
                 id="category"
@@ -119,7 +119,7 @@ const TransectionForm = ({ mode = "CREATE", initialValues, handleSubmit }) => {
             </div>
 
             <div className="input_group" data-invalid={!!errors.date}>
-              <label htmlFor="date">Transection Date</label>
+              <label htmlFor="date">Transaction Date</label>
               <FormDatePicker
                 date={values.date}
                 setDate={(d) => setFieldValue("date", d)}
@@ -155,4 +155,4 @@ const TransectionForm = ({ mode = "CREATE", initialValues, handleSubmit }) => {
   );
 };
 
-export default TransectionForm;
+export default TransactionForm;

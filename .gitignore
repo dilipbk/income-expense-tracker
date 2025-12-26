@@ -25,11 +25,7 @@ dist-ssr
 *.sln
 *.sw?
 
-<<<<<<< HEAD
-
-=======
 # custom
 todo.md
 demo-db.json
 /markup
->>>>>>> update

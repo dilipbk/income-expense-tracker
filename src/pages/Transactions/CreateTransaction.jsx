@@ -35,7 +35,8 @@ const CreateTransaction = () => {
         error: "something went wrong",
       });
     } catch (error) {
-      console.error(error);
+      console.error("Failed to create transaction:", error);
+      toast.error("Failed to create transaction");
     }
     navigate("/transactions", { replace: true });
   };

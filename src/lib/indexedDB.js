@@ -5,7 +5,19 @@ const idb =
   window.msIndexedDB ||
   window.shimIndexedDB;
 
+/**
+ * IndexedDB wrapper class for managing local database operations
+ * Provides methods for CRUD operations on IndexedDB
+ */
 class IndexedDB {
+  /**
+   * Creates an IndexedDB instance
+   * @param {string} dbName - Database name
+   * @param {number} version - Database version
+   * @param {string} store - Object store name
+   * @param {string} keyPath - Key path for the store
+   * @param {string|null} oldStore - Old store name to delete during upgrade
+   */
   constructor(dbName, version, store, keyPath, oldStore = null) {
     this.dbName = dbName;
     this.version = version;
@@ -29,8 +41,7 @@ class IndexedDB {
           if (db.objectStoreNames.contains(this.store)) {
             resolve(db);
           } else {
-            reject(Error("collection not found"));
-            // TODO: fix this for user using pop up
+            reject(Error("Database store not found. Please refresh the page."));
           }
         };
       } catch (error) {
@@ -62,15 +73,15 @@ class IndexedDB {
             db.createObjectStore(this.store, {
               keyPath: this.keyPath,
             });
-            response[this.store] = `created successfull`;
+            response[this.store] = `created successfully`;
           } else {
-            response[this.store] = `allready created`;
+            response[this.store] = `already created`;
           }
 
           // handle old store
           if (this.oldStore && db.objectStoreNames.contains(this.oldStore)) {
             db.deleteObjectStore(this.oldStore);
-            response[this.oldStore] = `deleted successfull`;
+            response[this.oldStore] = `deleted successfully`;
           }
 
           resolve(response);
@@ -89,7 +100,7 @@ class IndexedDB {
     return new Promise(async (resolve, reject) => {
       try {
         const db = await this.#open();
-        // collection transection
+        // collection transaction
         const tx = db.transaction(this.store, "readonly");
         const txstore = tx.objectStore(this.store);
         // collection data
@@ -97,7 +108,7 @@ class IndexedDB {
 
         // handle data success
         data.onsuccess = (event) => {
-          // close database on transection complete
+          // close database on transaction complete
           tx.oncomplete = () => db.close();
           resolve(data.result);
         };
@@ -116,7 +127,7 @@ class IndexedDB {
       try {
         const db = await this.#open();
 
-        // collection transection
+        // collection transaction
         const tx = db.transaction(this.store, "readwrite");
         const txstore = tx.objectStore(this.store);
         // collection data
@@ -124,7 +135,7 @@ class IndexedDB {
 
         // handle data success
         response.onsuccess = (event) => {
-          // close database on transection complete
+          // close database on transaction complete
           tx.oncomplete = () => db.close();
           resolve(response.result);
         };
@@ -142,7 +153,7 @@ class IndexedDB {
     return new Promise(async (resolve, reject) => {
       try {
         const db = await this.#open();
-        // collection transection
+        // collection transaction
         const tx = db.transaction(this.store, "readwrite");
         const txstore = tx.objectStore(this.store);
         // put to collection data
@@ -150,7 +161,7 @@ class IndexedDB {
 
         // handle data success
         response.onsuccess = (event) => {
-          // close database on transection complete
+          // close database on transaction complete
           tx.oncomplete = () => db.close();
           resolve(response.result);
         };
@@ -168,7 +179,7 @@ class IndexedDB {
     return new Promise(async (resolve, reject) => {
       try {
         const db = await this.#open();
-        // collection transection
+        // collection transaction
         const tx = db.transaction(this.store, "readwrite");
         const txstore = tx.objectStore(this.store);
         // delete collection from data
@@ -176,7 +187,7 @@ class IndexedDB {
 
         // handle data success
         data.onsuccess = (event) => {
-          // close database on transection complete
+          // close database on transaction complete
           tx.oncomplete = () => db.close();
           resolve(data.result);
         };
@@ -195,13 +206,13 @@ class IndexedDB {
       try {
         const db = await this.#open();
 
-        // collection transection
+        // collection transaction
         const tx = db.transaction(this.store, "readwrite");
         dataArray.forEach((data) => {
           tx.objectStore(this.store).add(data);
         });
 
-        // handle transection success
+        // handle transaction success
         tx.oncomplete = (event) => {
           db.close();
           resolve(true);
@@ -228,7 +239,7 @@ class IndexedDB {
       // handle database success
       databaseReq.onsuccess = (event) => {
         const db = databaseReq.result;
-        // collection transection
+        // collection transaction
         const tx = db.transaction(this.store, "readwrite");
         const txstore = tx.objectStore(this.store);
         // delete collection from data
@@ -236,7 +247,7 @@ class IndexedDB {
 
         // handle data success
         data.onsuccess = (event) => {
-          // close database on transection complete
+          // close database on transaction complete
           tx.oncomplete = () => db.close();
           resolve(data.result);
         };

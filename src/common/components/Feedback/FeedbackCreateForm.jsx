@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import * as Yup from "yup";
 import { createFeedback } from "../../../helpers/feedbackHelpers";
 
-const transectionSchema = Yup.object({
+const transactionSchema = Yup.object({
   name: Yup.string().max(30).required(),
   text: Yup.string().min(3).required(),
   email: Yup.string().email().required(),
@@ -37,7 +37,7 @@ const FeedbackCreateForm = ({
       }}
       onSubmit={async (values) => await handleSubmit(values)}
       onReset={handleCancel}
-      validationSchema={transectionSchema}
+      validationSchema={transactionSchema}
       enableReinitialize={true}
       validateOnChange={false}
       validateOnBlur={false}

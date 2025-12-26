@@ -8,7 +8,7 @@ import {
 import StatCard from "./Card";
 
 const Stats = ({
-  transections = [],
+  transactions = [],
   className = "",
   showWallet = true,
   showIncome = true,
@@ -17,7 +17,7 @@ const Stats = ({
 }) => {
   // total incomes
   const incomes =
-    transections?.reduce((prev, current) => {
+    transactions?.reduce((prev, current) => {
       if (current.type == "income") {
         return prev + current.amount;
       }
@@ -26,7 +26,7 @@ const Stats = ({
 
   // total expenses
   const expenses =
-    transections?.reduce((prev, current) => {
+    transactions?.reduce((prev, current) => {
       if (current.type == "expense") {
         return prev + current.amount;
       }
@@ -64,8 +64,8 @@ const Stats = ({
       ) : null}
       {showTotal ? (
         <StatCard
-          type="transections"
-          title="transections"
+          type="transactions"
+          title="transactions"
           amount={incomes + expenses}
           icon={BsCurrencyDollar}
         />
